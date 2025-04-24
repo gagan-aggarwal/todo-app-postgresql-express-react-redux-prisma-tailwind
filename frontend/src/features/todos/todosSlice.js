@@ -32,6 +32,10 @@ export const removeTodo = createAsyncThunk('todos/removeTodo', async (id) => {
     return id;
 });
 
+export const editTodo = createAsyncThunk('todos/updateTodo', async (todo) => {
+    return await updateTodo(todo);
+});
+
 const todosSlice = createSlice({
     name: 'todos',
     initialState,
@@ -60,6 +64,12 @@ const todosSlice = createSlice({
             })
             .addCase(removeTodo.fulfilled, (state, action) => {
                 state.items = state.items.filter(todo => todo.id !== action.payload);
+            })
+            .addCase(editTodo.fulfilled, (state, action) => {
+                const index = state.items.findIndex(todo => todo.id === action.payload.id);
+                if (index !== -1) {
+                    state.items[index] = action.payload;
+                }
             });
     },
 });
